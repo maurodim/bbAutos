@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-03-2017 a las 18:34:39
+-- Tiempo de generación: 12-04-2017 a las 19:31:15
 -- Versión del servidor: 10.1.9-MariaDB
 -- Versión de PHP: 7.0.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bbgestion`
+-- Base de datos: `bbsgestionmotos`
 --
 
 -- --------------------------------------------------------
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 CREATE TABLE `articulos` (
   `ID` int(11) NOT NULL,
   `BARRAS` varchar(30) DEFAULT NULL,
-  `NOMBRE` varchar(49) DEFAULT NULL,
-  `SERVICIO` double DEFAULT NULL,
+  `NOMBRE` varchar(100) DEFAULT NULL,
+  `SERVICIO` double DEFAULT '0',
   `COSTO` double DEFAULT NULL,
   `PRECIO` double DEFAULT NULL,
   `MINIMO` int(11) DEFAULT NULL,
@@ -47,7 +47,11 @@ CREATE TABLE `articulos` (
   `servicio1` double DEFAULT '0',
   `idcombo` int(11) DEFAULT '0',
   `actualizacion` int(11) NOT NULL DEFAULT '0',
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `dolar` double NOT NULL DEFAULT '1',
+  `lista2` double NOT NULL DEFAULT '0',
+  `lista3` double NOT NULL DEFAULT '0',
+  `lista4` double NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -99,7 +103,10 @@ CREATE TABLE `coeficienteslistas` (
 --
 
 INSERT INTO `coeficienteslistas` (`id`, `coeficiente`, `descripcion`) VALUES
-(1, 1, 'base');
+(1, 1, 'base'),
+(2, 1.2, 'mecanicos'),
+(3, 1.3, 'no residente'),
+(4, 1, 'Mayorista');
 
 -- --------------------------------------------------------
 
@@ -234,7 +241,10 @@ CREATE TABLE `listcli` (
 
 INSERT INTO `listcli` (`COD_CLIENT`, `RAZON_SOCI`, `DOMICILIO`, `COND_VTA`, `TELEFONO_1`, `LISTADEPRECIO`, `NUMERODECUIT`, `CUPODECREDITO`, `empresa`, `codmmd`, `saldo`, `saldoactual`, `TIPO_IVA`, `COEFICIENTE`, `id`) VALUES
 ('999999', 'CONSUMIDOR FINAL', 'NN', 1, '11', 1, '1', 0, 'sd', 1, 0, 0, 1, 1, 1),
-('2', 'CAF 21', 'PADRE QUIROGA 2230', 1, '12', 1, '33678412649', NULL, 'sd', 2, 0, 0, 1, 1, 2);
+('2', 'CAF 21', 'PADRE QUIROGA 2230', 1, '12', 3, '33678412649', NULL, 'sd', 2, 0, 0, 1, 1, 2),
+('null', 'marito', 'ksmdlnvslnl', 1, '131313', 1, '131313', NULL, 'sd', 3, 0, 0, 1, 1, 3),
+('null', 'yoyoyoyooyo', 'nnnlllkl', 1, '313131313', 2, '131313', NULL, 'sd', 4, 0, 0, 1, 1, 4),
+('null', 'vosvosvos', 'jnnlnlnl', 2, '1313131313', 4, '31313', 5000, 'sd', 5, 0, 0, 1, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -306,7 +316,8 @@ CREATE TABLE `movimientosclientes` (
   `idSucursal` int(11) NOT NULL DEFAULT '0',
   `estado` int(11) DEFAULT NULL,
   `id` bigint(20) NOT NULL,
-  `idcomprobante` int(11) DEFAULT '0'
+  `idcomprobante` int(11) DEFAULT '0',
+  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -423,7 +434,7 @@ CREATE TABLE `tipoacceso` (
 --
 
 INSERT INTO `tipoacceso` (`numero`, `descripcion`, `nivel`, `menu1`, `menu2`, `menu3`, `menu4`, `menu5`, `menu6`, `menu7`) VALUES
-(1, 'administrador', 1, 1, 1, 1, 1, 1, 1, 1),
+(1, 'administrador', 1, 1, 1, 1, 0, 0, 1, 0),
 (2, 'cajero', 2, 0, 0, 1, 1, 0, 1, 0),
 (3, 'prueba', 3, 0, 0, 1, 1, 0, 0, 0);
 
@@ -445,7 +456,7 @@ CREATE TABLE `tipocomprobantes` (
 --
 
 INSERT INTO `tipocomprobantes` (`numero`, `descripcion`, `numeroActivo`, `numeroSucursal`) VALUES
-(1, 'ticket', 0, 1),
+(1, 'ticket', 6, 1),
 (2, 'FCA A', 0, 1),
 (3, 'remito proveedor', 0, 1),
 (4, 'remito interno', 0, 1),
@@ -455,8 +466,8 @@ INSERT INTO `tipocomprobantes` (`numero`, `descripcion`, `numeroActivo`, `numero
 (8, 'FCA A', 0, 2),
 (9, 'ticket', 0, 3),
 (10, 'FCA A', 0, 3),
-(11, 'recibo de pago', 0, 1),
-(12, 'mov caja', 1, 0),
+(11, 'recibo de pago', 2, 1),
+(12, 'mov caja', 3, 0),
 (13, 'gasto fijo', 0, 1),
 (14, 'ticket', 0, 4),
 (15, 'FCA A', 0, 4),
@@ -561,7 +572,8 @@ ALTER TABLE `caja`
 -- Indices de la tabla `coeficienteslistas`
 --
 ALTER TABLE `coeficienteslistas`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indices de la tabla `combo`
@@ -619,7 +631,8 @@ ALTER TABLE `movimientoscaja`
 -- Indices de la tabla `movimientosclientes`
 --
 ALTER TABLE `movimientosclientes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fecha` (`fecha`);
 
 --
 -- Indices de la tabla `proveedores`
@@ -680,7 +693,7 @@ ALTER TABLE `ivaventas`
 -- AUTO_INCREMENT de la tabla `listcli`
 --
 ALTER TABLE `listcli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `movimientosarticulos`
 --
