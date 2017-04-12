@@ -104,7 +104,12 @@ public class Numeros {
         }
         num=num.replace(",",".");
         System.out.println(" rsultado "+num);
-        Double dd=Double.parseDouble(num);
+        Double dd=0.00;
+        try{
+            dd=Double.parseDouble(num);
+        }catch(java.lang.NumberFormatException exxf){
+            System.err.println(exxf);
+        }
         return dd;
     }
     

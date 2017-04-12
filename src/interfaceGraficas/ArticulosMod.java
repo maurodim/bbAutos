@@ -139,8 +139,10 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         jLabel1.setText("Descripcion");
 
         jLabel2.setText("Valor Dolar:");
+        jLabel2.setEnabled(false);
 
         jTextField2.setText("0");
+        jTextField2.setEnabled(false);
 
         jLabel4.setText("Precio de Costo:");
 
@@ -156,8 +158,10 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         jTextField5.setText("0");
 
         jLabel6.setText("Precio Mayorista:");
+        jLabel6.setEnabled(false);
 
         jTextField6.setText("0");
+        jTextField6.setEnabled(false);
         jTextField6.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField6FocusLost(evt);
@@ -261,8 +265,10 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         );
 
         jLabel10.setText("Precio Mecanicos");
+        jLabel10.setEnabled(false);
 
         jTextField9.setText("0");
+        jTextField9.setEnabled(false);
 
         jCheckBox3.setText("Transformar en Combo");
         jCheckBox3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -310,8 +316,10 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         jTextField10.setText("0");
 
         jLabel13.setText("Precio No Residente:");
+        jLabel13.setEnabled(false);
 
         jTextField11.setText("0");
+        jTextField11.setEnabled(false);
 
         jLabel15.setText("jLabel15");
 

@@ -176,11 +176,11 @@ public class Inicio extends javax.swing.JFrame {
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
         jMenuItem21 = new javax.swing.JMenuItem();
-        jMenuItem24 = new javax.swing.JMenuItem();
         jMenuItem26 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem24 = new javax.swing.JMenuItem();
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem18 = new javax.swing.JMenuItem();
         jMenuItem19 = new javax.swing.JMenuItem();
@@ -283,14 +283,6 @@ public class Inicio extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem21);
 
-        jMenuItem24.setText("Importar Excell");
-        jMenuItem24.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem24ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem24);
-
         jMenuItem26.setText("Cotizacion del Dolar");
         jMenuItem26.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,6 +312,14 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
         jMenu2.add(jMenuItem12);
+
+        jMenuItem24.setText("Importar Excell");
+        jMenuItem24.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem24ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem24);
 
         jMenuItem13.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
         jMenuItem13.setText("Consultas");
