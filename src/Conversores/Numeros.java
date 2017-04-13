@@ -137,4 +137,9 @@ public class Numeros {
         String valor=String.valueOf(coe);
         return valor;
     }
+    public static Double ConvertirEnDescuento(Double numero){
+        Double coe=numero / 100;
+        //coe=coe + 1;
+        return coe;
+    }
 }

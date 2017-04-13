@@ -276,7 +276,10 @@ public class SeleccionDeClientes extends javax.swing.JInternalFrame {
         desc=desc / 100;
         desc= 1 - desc;
         int condicionVta=Integer.parseInt(this.jTextField4.getText());
-        if(condicionVta==2)IngresoDePedidos.jCheckBox2.setSelected(false);
+        if(condicionVta==2){
+            IngresoDePedidos.jCheckBox2.setEnabled(true);
+            IngresoDePedidos.jCheckBox2.setSelected(false);
+        }
         int listaDePrecio=Integer.parseInt(this.jTextField2.getText());
         cliT.setDescuento(desc);
         cliT.setCondicionDeVenta(condicionVta);
@@ -289,6 +292,7 @@ public class SeleccionDeClientes extends javax.swing.JInternalFrame {
         }catch(java.lang.NullPointerException ex){
             IngresoDePedidos.cliT=cliT;
             IngresoDePedidos.jLabel10.setText(cliT.getRazonSocial());
+            
             IngresoDePedidos.jTextField1.requestFocus();
         }
         

@@ -938,13 +938,13 @@ private void cargarLista(ArrayList lista){
     
     this.jTable2.setModel(modelo);
     columnaNumero=this.jTable2.getColumn("Codigo");
-        columnaNumero.setPreferredWidth(50);
-        columnaNumero.setMaxWidth(50);
+        columnaNumero.setPreferredWidth(90);
+        columnaNumero.setMaxWidth(90);
         columnaDescripcion=this.jTable2.getColumn("Descripcion");
         columnaDescripcion.setPreferredWidth(100);
         columnaPrecio=this.jTable2.getColumn("Precio");
-        columnaPrecio.setPreferredWidth(60);
-        columnaPrecio.setMaxWidth(60);
+        columnaPrecio.setPreferredWidth(70);
+        columnaPrecio.setMaxWidth(70);
         
     //this.jList1.setModel(modelo);
     this.jTable2.requestFocus();

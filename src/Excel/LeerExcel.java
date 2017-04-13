@@ -40,12 +40,18 @@ public class LeerExcel {
     private Transaccionable tra;
     private ArrayList colmm;
     private Double porc1;
+    private int iaa;
+    private int ori;
+    private Double desc;
     
-   public void leerExcel1(String fileName,ArrayList columnas,Double porcentaje) throws SQLException {
+   public void leerExcel1(String fileName,ArrayList columnas,Double porcentaje,int iva,int origi,Double descuen) throws SQLException {
        tra=new ConeccionLocal();
        List cellDataList = new ArrayList();
        colmm=columnas;
        porc1=porcentaje;
+       iaa=iva;
+       ori=origi;
+       desc=descuen;
 try
 {
 /**
@@ -116,6 +122,8 @@ private void printToConsole(List cellDataList)
         String talle7 = null;
         String talle8 = null;
         String talle9 = null;
+        String marca="";
+        String proveedor="";
         Double precio = null;
         Double precio2=null;
         Double precio3=null;
@@ -126,10 +134,16 @@ private void printToConsole(List cellDataList)
        ColumnasExcel col1; 
        ColumnasExcel col2; 
        ColumnasExcel col3; 
-       ColumnasExcel col4; 
-       col1=(ColumnasExcel) colmm.get(0);
-       col2=(ColumnasExcel) colmm.get(1);
-       col3=(ColumnasExcel) colmm.get(2);
+       ColumnasExcel col4;
+       ColumnasExcel col5;
+       ColumnasExcel col6;
+       
+       col1=(ColumnasExcel) colmm.get(0);//codigo
+       col2=(ColumnasExcel) colmm.get(1);//descripcion
+       col3=(ColumnasExcel) colmm.get(2);//costo
+       col4=(ColumnasExcel) colmm.get(3);//precio de venta
+       col5=(ColumnasExcel) colmm.get(4);//marca
+       col6=(ColumnasExcel) colmm.get(5);//proveedor
       Articulos arti; 
       Facturar fact=new Articulos();
       Editables edi=new Articulos();
@@ -140,78 +154,140 @@ private void printToConsole(List cellDataList)
         
        
         int alerta=0;
-       
-        int j=col1.getId();
+       int j;
+            
+            j=col1.getId();
             HSSFCell hssfCell = (HSSFCell) cellTempList.get(j);
             String stringCellValue = hssfCell.toString();
             barra=stringCellValue;
+            
+            if(col5.getId()!=null){
+                j=col5.getId();
+                hssfCell = (HSSFCell) cellTempList.get(j);
+                stringCellValue = hssfCell.toString();
+                marca=stringCellValue.replaceAll("'","");
+                barra+=" "+stringCellValue;
+            }else{
+                marca="";
+            }
+            
+            if(col6.getId()!=null){
+                j=col6.getId();
+                hssfCell = (HSSFCell) cellTempList.get(j);
+                stringCellValue = hssfCell.toString();
+                proveedor=stringCellValue.replaceAll("'","");
+                barra+=" "+stringCellValue;
+            }else{
+                proveedor="";
+            }
+            
             arti=(Articulos) fact.cargarPorCodigoDeBarra(barra);
             //System.err.println("Contenido: "+j+" "+stringCellValue);
             //descripcion="";
             //if(i > 0){
             
                 //if(j==col1.getId())barra=stringCellValue;
-            j=col2.getId();
-            hssfCell = (HSSFCell) cellTempList.get(j);
-            stringCellValue = hssfCell.toString();
-            descripcion=stringCellValue;
-            descripcion=descripcion.replaceAll("'","");
+            if(col2.getId()!=null){
+                j=col2.getId();
+                hssfCell = (HSSFCell) cellTempList.get(j);
+                stringCellValue = hssfCell.toString();
+                descripcion=stringCellValue;
+                descripcion=descripcion.replaceAll("'","");
+            }
                 //if(j==col2.getId())descripcion=stringCellValue;
-            j=col3.getId();
+            if(col4.getId() !=null){
+                j=col4.getId();
             hssfCell = (HSSFCell) cellTempList.get(j);
             stringCellValue = hssfCell.toString();
-                if(j==col3.getId()){
-                    if(stringCellValue.equals(col3.getContenido())){
+                if(j==col4.getId()){
+                    if(stringCellValue.equals(col4.getContenido())){
                         
                     }else{
-                        System.out.println("RENGLON: "+i);
+                        //System.out.println("RENGLON: "+i);
                         stringCellValue=stringCellValue.replaceAll("$","");
-                        costo=Numeros.ConvertirStringADouble(stringCellValue);
+                        precio=Numeros.ConvertirStringADouble(stringCellValue);
+                        if(iaa ==1 && ori==2){
+                            precio=precio * 1.21;
+                        }
                         
                     }
                 }
-                if(costo!=null){
-                if(costo > 0.00){
-                    precio=costo * porc1;
-                    System.out.println("precio calculado: "+precio);
-                    if(arti.getCodigoDeBarra()!=null ){
-                        System.out.println("EXISTE EL CODIGO "+arti.getCodigoDeBarra());
-                        arti.setPrecioCosto(costo);
-                        arti.setPrecioUnitarioNeto(precio);
-                        arti.setModificaPrecio(true);
-                        arti.setModificaServicio(false);
+
+            }
+            
+            
+            if(col3.getId() !=null){
+                j=col3.getId();
+                hssfCell = (HSSFCell) cellTempList.get(j);
+                stringCellValue = hssfCell.toString();
+                    //if(j==col3.getId()){
+                        if(stringCellValue.equals(col3.getContenido())){
+                            costo=null;
+                        }else{
+                            //System.out.println("RENGLON: "+i);
+                            stringCellValue=stringCellValue.replaceAll("$","");
+                            costo=Numeros.ConvertirStringADouble(stringCellValue);
+
+                        }
+                   // }
+                    if(costo!=null){
                         
-                        edi.ModificaionObjeto(arti);
-                    }else{
-                        arti=new Articulos();
-                        arti.setCodigoDeBarra(barra);
-                        arti.setDescripcionArticulo(descripcion);
-                        arti.setPrecioCosto(costo);
-                        arti.setPrecioDeCosto(costo);
-                        arti.setPrecioUnitarioNeto(precio);
-                        arti.setPrecioServicio(precio);
-                        arti.setModificaPrecio(true);
-                        arti.setModificaServicio(false);
-                        arti.setRecargo(1.00);
-                        arti.setDolar(1.00);
-                        arti.setLista2(precio);
-                        arti.setLista3(precio);
-                        arti.setLista4(precio);
-                        arti.setIdCombo(0);
-                        System.out.println("NO ESTA CARGADO "+arti.getDescripcionArticulo());
-                        edi.AltaObjeto(arti);
-                        
-                        
+                    
+                        if(desc > 0.00){
+                            
+                            Double costo1=costo * desc;
+                            costo= costo - costo1;
+                        }
+                        if(iaa==1 && ori==1){
+                            costo=costo * 1.21;
+                        }
+                        if(porc1 > 0.00){
+                            precio=costo * porc1;
+                            
+                        }
                     }
-                    costo=null;
+                        //System.out.println("precio calculado: "+precio);
+                        if(arti.getCodigoDeBarra()!=null ){
+                            System.err.println("EXISTE EL CODIGO "+arti.getCodigoDeBarra());
+                            arti.setPrecioCosto(costo);
+                            arti.setPrecioUnitarioNeto(precio);
+                            arti.setModificaPrecio(true);
+                            arti.setModificaServicio(false);
+                            arti.setMarca(marca);
+                            arti.setProveedor(proveedor);
+                            edi.ModificaionObjeto(arti);
+                        }else{
+                            arti=new Articulos();
+                            arti.setCodigoDeBarra(barra);
+                            arti.setDescripcionArticulo(descripcion);
+                            arti.setPrecioCosto(costo);
+                            arti.setPrecioDeCosto(costo);
+                            arti.setPrecioUnitarioNeto(precio);
+                            arti.setPrecioServicio(precio);
+                            arti.setModificaPrecio(true);
+                            arti.setModificaServicio(false);
+                            arti.setRecargo(1.00);
+                            arti.setDolar(1.00);
+                            arti.setLista2(precio);
+                            arti.setLista3(precio);
+                            arti.setLista4(precio);
+                            arti.setMarca(marca);
+                            arti.setProveedor(proveedor);
+                            arti.setIdCombo(0);
+                            System.out.println("NO ESTA CARGADO "+arti.getDescripcionArticulo());
+                            edi.AltaObjeto(arti);
+
+
+                        }
+                        costo=null;
+
                     
-                }
-                }
                     
+    }   
                 
                 if (j > 1){
                     if(alerta== 0){
-                        System.out.println(precio);
+                        //System.out.println(precio);
                         //if(precio.equals("")){
                         //}else{
                         //barra=barra.replaceAll(".0","");
@@ -231,8 +307,9 @@ private void printToConsole(List cellDataList)
             
         
         
-        System.err.println(sentencia);
-        System.out.println("  FINAL DE RENGLON");
+        //System.err.println(sentencia);
+        //System.out.println("  FINAL DE RENGLON");
+    
         barra=null;
         fila++;
     }
@@ -356,14 +433,18 @@ private ArrayList printToConsoleA(List cellDataList)
         }
     }
         
-        System.out.println(sentencia);
-        System.out.println("  FINAL DE RENGLON");
+        //System.out.println(sentencia);
+        //System.out.println("  FINAL DE RENGLON");
         barra=null;
         fila++;
     }
            
-    
+    col=new ColumnasExcel();
+                col.setId(null);
+                col.setContenido("NO SELECCIONADO");
+               columnas1.add(col);
     //JOptionPane.showMessageDialog(null,"PROCESO EXITOSO \n CANTIDAD DE FILAS PROCESADAS "+fila);
+    
     return columnas1;
    }
 }

@@ -74,6 +74,25 @@ public class Articulos implements Facturar,Editables,Modificable{
     private Double precioLista3;
     private Double precioLista4;
     private Double precioCosto;
+    private String marca;
+    private String proveedor;
+
+    public String getMarca() {
+        return marca;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(String proveedor) {
+        this.proveedor = proveedor;
+    }
+    
 
     public Double getPrecioCosto() {
         return precioCosto;
@@ -845,7 +864,7 @@ public class Articulos implements Facturar,Editables,Modificable{
         ArrayList resultado=new ArrayList();
         Articulos articulo=null;
         criterio=criterio.toUpperCase();
-        String sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where nombre like '%"+criterio+"%'";
+        String sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where barras like '"+criterio+"%' or nombre like '%"+criterio+"%'";
         
         //Transaccionable tra=new ConeccionLocal();
         rr=tra.leerConjuntoDeRegistros(sql);
@@ -936,13 +955,14 @@ public class Articulos implements Facturar,Editables,Modificable{
     @Override
     public ArrayList listarClientes(String nombre) {
          ArrayList listado=new ArrayList();
-        String sql="select id,nombre,barras,precio,equivalencia,costo,minimo,stock,servicio,servicio1,modificaprecio,modificaservicio,stock,recargo,idcombo,articulos.dolar,articulos.lista2,articulos.lista3,articulos.lista4,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where BARRAS like '"+nombre+"' and INHABILITADO=0";
+        String sql="select id,nombre,barras,precio,equivalencia,costo,minimo,stock,servicio,servicio1,modificaprecio,modificaservicio,stock,recargo,idcombo,articulos.dolar,articulos.lista2,articulos.lista3,articulos.lista4,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where BARRAS like '"+nombre+"%' and INHABILITADO=0";
         Transaccionable tra=new ConeccionLocal();
         ResultSet rr=tra.leerConjuntoDeRegistros(sql);
-        Articulos articulo=new Articulos();
+        Articulos articulo;
         
         try {
             while(rr.next()){
+                articulo=new Articulos();
                 articulo.setCodigoAsignado(rr.getString("ID"));
                 articulo.setDescripcionArticulo(rr.getString("NOMBRE"));
                 articulo.setNumeroId(rr.getInt("ID"));
@@ -1196,7 +1216,7 @@ public class Articulos implements Facturar,Editables,Modificable{
             articulo=(Articulos)it.next();
             fila[0]=String.valueOf(articulo.getCodigoDeBarra());
             fila[1]=articulo.getDescripcionArticulo();
-            fila[2]=" $"+Numeros.ConvertirNumero(articulo.getPrecioUnitarioNeto());
+            fila[2]=" $"+String.valueOf(articulo.getPrecioUnitarioNeto());
             
             //modelo.addElement(articulo.getDescripcionArticulo()+" $"+Numeros.ConvertirNumero(articulo.getPrecioUnitarioNeto()));
             modelo.addRow(fila);
@@ -1239,7 +1259,7 @@ public class Articulos implements Facturar,Editables,Modificable{
         ArrayList resultado=new ArrayList();
         Articulos articulo=null;
         criterio=criterio.toUpperCase();
-        String sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where nombre like '%"+criterio+"%'";
+        String sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where barras like '"+criterio+"%' or nombre like '%"+criterio+"%'";
         
         //Transaccionable tra=new ConeccionLocal();
         rr=tra.leerConjuntoDeRegistros(sql);

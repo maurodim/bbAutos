@@ -300,7 +300,7 @@ public class ArticulosAbm extends javax.swing.JInternalFrame {
     while(il.hasNext()){
         art=(Articulos)il.next();
         //System.out.println("DESCRIPCION "+art.getDescripcionArticulo());
-        modelo.addElement(art.getCodigoAsignado()+" "+art.getDescripcionArticulo());
+        modelo.addElement(art.getCodigoAsignado()+" - "+art.getCodigoDeBarra()+" - "+art.getDescripcionArticulo());
     }
     ListadoDeArticulos1 listadoDeArt=new ListadoDeArticulos1();
     listadoDeArt.jList1.setModel(modelo);

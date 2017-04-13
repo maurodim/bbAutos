@@ -62,7 +62,10 @@ public class ColumnasExcel implements Modelable{
         while(it.hasNext()){
             col=(ColumnasExcel) it.next();
             modelo.addElement(col.getContenido());
+            modelo.setSelectedItem(col.getContenido());
         }
+        
+        
         return modelo;
     }
 

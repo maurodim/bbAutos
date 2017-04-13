@@ -136,9 +136,13 @@ public class AbmIva extends javax.swing.JInternalFrame {
             selC.jComboBox1.setModel(modeloo);
             selC.jComboBox3.setModel(mod.MostrarEnCombo(columm));
             selC.jComboBox6.setModel(mod.MostrarEnCombo(columm));
+            selC.jComboBox7.setModel(mod.MostrarEnCombo(columm));
+            selC.jComboBox4.setModel(mod.MostrarEnCombo(columm));
+            selC.jComboBox5.setModel(mod.MostrarEnCombo(columm));
             selC.setVisible(true);
             selC.toFront();
             Double porcentaje=0.00;
+            Double bonificacion=0.00;
             int sele=0;
             exCol=new ColumnasExcel();
             sele=selC.jComboBox1.getSelectedIndex();
@@ -155,12 +159,40 @@ public class AbmIva extends javax.swing.JInternalFrame {
             exCol=(ColumnasExcel) columm.get(sele);
             exCol.setNombreDato("COSTO");
             enviarC.add(exCol);
+            sele=selC.jComboBox7.getSelectedIndex();
+            exCol=new ColumnasExcel();
+            exCol=(ColumnasExcel) columm.get(sele);
+            exCol.setNombreDato("PRECIO");
+            enviarC.add(exCol);
+            sele=selC.jComboBox5.getSelectedIndex();
+            exCol=new ColumnasExcel();
+            exCol=(ColumnasExcel) columm.get(sele);
+            exCol.setNombreDato("MARCA");
+            enviarC.add(exCol);
+            sele=selC.jComboBox4.getSelectedIndex();
+            exCol=new ColumnasExcel();
+            exCol=(ColumnasExcel) columm.get(sele);
+            exCol.setNombreDato("PROVEEDOR");
+            enviarC.add(exCol);
+            
+            
             System.out.println(selC.jComboBox1.getSelectedIndex()+" -- "+selC.jComboBox3.getSelectedIndex()+" -- "+selC.jComboBox6.getSelectedIndex());
             porcentaje=Numeros.ConvertirStringADouble(selC.jTextField1.getText());
             porcentaje=Numeros.ConvertirEnCoeficiente(porcentaje);
-            leer.leerExcel1(seleccionado,enviarC,porcentaje);
-            this.dispose();
-            
+            bonificacion=Numeros.ConvertirStringADouble(selC.jTextField2.getText());
+            bonificacion=Numeros.ConvertirEnDescuento(bonificacion);
+            int ivva=0;
+            int origen=0;
+            if(selC.jCheckBox1.isSelected()){
+                ivva=1;
+                if(selC.jRadioButton1.isSelected())origen=1;
+                if(selC.jRadioButton2.isSelected())origen=2;
+            }
+            exCol=(ColumnasExcel) columm.get(0);
+            if(exCol.getId()!=null){
+                leer.leerExcel1(seleccionado,enviarC,porcentaje,ivva,origen,bonificacion);
+                this.dispose();
+            }
             /*
             String period=null;
             if(JOptionPane.showConfirmDialog(this,"Procesa el archivo seleccionado?","Aplicar Origen",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE)==1){
