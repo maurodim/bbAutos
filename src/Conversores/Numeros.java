@@ -103,7 +103,7 @@ public class Numeros {
             num="0.00";
         }
         num=num.replace(",",".");
-        System.out.println(" rsultado "+num);
+        //System.out.println(" rsultado "+num);
         Double dd=0.00;
         try{
             dd=Double.parseDouble(num);

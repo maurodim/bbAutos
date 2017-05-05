@@ -27,8 +27,18 @@ public class Mail {
     private String password="SUtter001";
     private Session sesion;
     private String direccionFile;
+    private String direccionFile1;
     private String detalleListado;
+    private String detalleListado1;
     private String asunto;
+
+    public void setDetalleListado1(String detalleListado1) {
+        this.detalleListado1 = detalleListado1;
+    }
+
+    public void setDireccionFile1(String direccionFile1) {
+        this.direccionFile1 = direccionFile1;
+    }
 
     public void setAsunto(String asunto) {
         this.asunto = asunto;
@@ -66,7 +76,9 @@ public class Mail {
             mensaje.setSubject(asunto);
             BodyPart texto=new MimeBodyPart();
             texto.setText("INFORME GENERADO POR CIERRE DE CAJA   \n Saludos");
+            
             BodyPart adjunto=new MimeBodyPart();
+            
             adjunto.setDataHandler(new DataHandler(new FileDataSource(direccionFile)));
             adjunto.setFileName(detalleListado);
             MimeMultipart multiParte=new MimeMultipart();

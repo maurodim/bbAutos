@@ -583,7 +583,11 @@ public class IngresoDePedidos extends javax.swing.JInternalFrame {
         if(this.jCheckBox2.isSelected()){
             comprobante.setPagado(1);
         }else{
-            comprobante.setPagado(0);
+             if(JOptionPane.showConfirmDialog(this,"Confirma que la Operación es en Cta Cte?","Operación en CTA CTE",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE)==1){
+                comprobante.setPagado(1);
+            }else{
+                comprobante.setPagado(0);
+            }
             /*
              * ACA DEBO COMPROBAR EL LIMITE DEL CLIENTE Y SI LO SUPERA LA COMPRA RECHAZAR LA VENTA
              * 

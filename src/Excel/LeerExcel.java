@@ -7,7 +7,9 @@ package Excel;
 
 import Conversores.Numeros;
 import Excel.Objetos.ColumnasExcel;
+import interfaceGraficas.AbmIva;
 import interfaces.Editables;
+import interfaces.Modificable;
 import interfaces.Transaccionable;
 import interfacesPrograma.Facturar;
 import java.io.FileInputStream;
@@ -18,8 +20,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import objetos.Articulos;
 import objetos.ConeccionLocal;
@@ -43,6 +47,7 @@ public class LeerExcel {
     private int iaa;
     private int ori;
     private Double desc;
+    private ConcurrentHashMap listadoArt;
     
    public void leerExcel1(String fileName,ArrayList columnas,Double porcentaje,int iva,int origi,Double descuen) throws SQLException {
        tra=new ConeccionLocal();
@@ -101,14 +106,29 @@ printToConsole(cellDataList);
 */
 private void printToConsole(List cellDataList)
 {
-    String error=""; 
+    String error="";
+    ArrayList lstNuevos=new ArrayList();
+    ArrayList lstModificador=new ArrayList();
     int fila=0;
-    
+    //DefaultListModel modeloL=new DefaultListModel();
+    //ListadoDeProcesos listador=new ListadoDeProcesos();
+    //listador.setVisible(true);
+    //listador.toFront();
+    /*
+    Barra barrr=new Barra(null,false);
+    barrr.setVisible(true);
+    barrr.toFront();
+    barrr.jProgressBar1.setMinimum(0);
+    barrr.jProgressBar1.setMaximum(100000);
+    barrr.jProgressBar1.setVisible(true);
+    int progrr=0;
+    */
     Boolean verif=false;
     ArrayList lstArt=new ArrayList();
     String unidadDeMedida="";
     Double peso=0.00;
-    
+    Articulos.CargarMap();
+    listadoArt=Articulos.getListadoBarr();
     Integer porc=0;
      String barra = null;
         String descripcion = null;
@@ -152,7 +172,7 @@ private void printToConsole(List cellDataList)
         List cellTempList = (List) cellDataList.get(i);
         
         
-       
+       //progrr++;
         int alerta=0;
        int j;
             
@@ -172,16 +192,27 @@ private void printToConsole(List cellDataList)
             }
             
             if(col6.getId()!=null){
+                
                 j=col6.getId();
+                System.out.println("columna "+j+" "+proveedor+" fila "+i);
+                try{
                 hssfCell = (HSSFCell) cellTempList.get(j);
                 stringCellValue = hssfCell.toString();
+                }catch(java.lang.IndexOutOfBoundsException eex){
+                    stringCellValue="";
+                    System.err.println(eex);
+                }
                 proveedor=stringCellValue.replaceAll("'","");
                 barra+=" "+stringCellValue;
             }else{
                 proveedor="";
             }
-            
-            arti=(Articulos) fact.cargarPorCodigoDeBarra(barra);
+            barra=barra.replaceAll("'","");
+            //arti=(Articulos) fact.cargarPorCodigoDeBarra(barra);
+            arti=(Articulos) listadoArt.get(barra);
+            if(arti==null){
+                arti=new Articulos();
+            }
             //System.err.println("Contenido: "+j+" "+stringCellValue);
             //descripcion="";
             //if(i > 0){
@@ -218,8 +249,13 @@ private void printToConsole(List cellDataList)
             
             if(col3.getId() !=null){
                 j=col3.getId();
+                try{
                 hssfCell = (HSSFCell) cellTempList.get(j);
                 stringCellValue = hssfCell.toString();
+                }catch(java.lang.IndexOutOfBoundsException eex){
+                    stringCellValue="0.00";
+                    System.err.println(eex);
+                }
                     //if(j==col3.getId()){
                         if(stringCellValue.equals(col3.getContenido())){
                             costo=null;
@@ -247,18 +283,37 @@ private void printToConsole(List cellDataList)
                         }
                     }
                         //System.out.println("precio calculado: "+precio);
-                        if(arti.getCodigoDeBarra()!=null ){
+                    /*    
+                    if(i==2302){
+                            JOptionPane.showMessageDialog(null,"VEAMOS "+i);
+                        }
+                    */
+                        if(arti.getCodigoDeBarra()!=null){
                             System.err.println("EXISTE EL CODIGO "+arti.getCodigoDeBarra());
+                            //modeloL.addElement("EXISTE EL CODIGO "+arti.getCodigoDeBarra()+".....");
                             arti.setPrecioCosto(costo);
                             arti.setPrecioUnitarioNeto(precio);
                             arti.setModificaPrecio(true);
                             arti.setModificaServicio(false);
                             arti.setMarca(marca);
                             arti.setProveedor(proveedor);
-                            edi.ModificaionObjeto(arti);
+                            lstModificador.add(arti);
+                            //edi.ModificaionObjeto(arti);
+                            //barrr.jProgressBar1.setString("EXISTE EL CODIGO ");
+                            
+                           // barrr.jProgressBar1.setValue(progrr);
+                            
                         }else{
-                            arti=new Articulos();
+                            //arti=new Articulos();
                             arti.setCodigoDeBarra(barra);
+                            if(descripcion.length() > 100){
+                                descripcion=descripcion.substring(0,100);
+                            }
+                            if(precio!=null){
+                                
+                            }else{
+                                precio=0.00;
+                            }
                             arti.setDescripcionArticulo(descripcion);
                             arti.setPrecioCosto(costo);
                             arti.setPrecioDeCosto(costo);
@@ -268,14 +323,18 @@ private void printToConsole(List cellDataList)
                             arti.setModificaServicio(false);
                             arti.setRecargo(1.00);
                             arti.setDolar(1.00);
+                            arti.setStockMinimo(0.00);
                             arti.setLista2(precio);
                             arti.setLista3(precio);
                             arti.setLista4(precio);
                             arti.setMarca(marca);
                             arti.setProveedor(proveedor);
                             arti.setIdCombo(0);
-                            System.out.println("NO ESTA CARGADO "+arti.getDescripcionArticulo());
-                            edi.AltaObjeto(arti);
+                            System.out.println("NO ESTA CARGADO "+arti.getDescripcionArticulo()+" // "+barra);
+                            //modeloL.addElement("NUEVO ARTICULO "+arti.getDescripcionArticulo()+".....");
+                            lstNuevos.add(arti);
+                            //edi.AltaObjeto(arti);
+                           // barrr.jProgressBar1.setValue(progrr);
 
 
                         }
@@ -312,12 +371,18 @@ private void printToConsole(List cellDataList)
     
         barra=null;
         fila++;
+        
     }
     //System.err.println(sentencia);
     
             
             
-    
+    //barrr.dispose();
+    System.out.println("NUEVO: "+lstNuevos.size()+" MODIFICADOS: "+lstModificador.size());
+    GuardarDatosExcel guarda=new GuardarDatosExcel();
+    guarda.setLstEdit(lstModificador);
+    guarda.setLstNew(lstNuevos);
+    guarda.Inicio();
     JOptionPane.showMessageDialog(null,"PROCESO EXITOSO \n CANTIDAD DE FILAS PROCESADAS "+fila);
    }
 public ArrayList LeerColumnas(String fileName){

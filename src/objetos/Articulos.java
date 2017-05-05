@@ -61,7 +61,7 @@ public class Articulos implements Facturar,Editables,Modificable{
     private static ArrayList listCombo=new ArrayList();
     private Integer idDeposito;
     private static Transaccionable tra=new ConeccionLocal();
-    private static ResultSet rr;
+    private ResultSet rr;
     private Double dolar;
     private Double lista2;
     private String descripcionLista2;
@@ -77,6 +77,11 @@ public class Articulos implements Facturar,Editables,Modificable{
     private String marca;
     private String proveedor;
 
+    public static ConcurrentHashMap getListadoBarr() {
+        return listadoBarr;
+    }
+
+    
     public String getMarca() {
         return marca;
     }
@@ -866,21 +871,21 @@ public class Articulos implements Facturar,Editables,Modificable{
         criterio=criterio.toUpperCase();
         String sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where barras like '"+criterio+"%' or nombre like '%"+criterio+"%'";
         
-        //Transaccionable tra=new ConeccionLocal();
-        rr=tra.leerConjuntoDeRegistros(sql);
+        Transaccionable tra1=new ConeccionLocal();
+        ResultSet rr1=tra1.leerConjuntoDeRegistros(sql);
         try {
-            while(rr.next()){
+            while(rr1.next()){
                 articulo=new Articulos();
-                articulo.setCodigoAsignado(rr.getString("ID"));
-                articulo.setDescripcionArticulo(rr.getString("NOMBRE"));
-                articulo.setNumeroId(rr.getInt("ID"));
-                articulo.setCodigoDeBarra(rr.getString("BARRAS"));
-                articulo.setRecargo(rr.getDouble("recargo"));
-                articulo.setPrecioUnitarioNeto(rr.getDouble("PRECIO"));
-                articulo.setEquivalencia(rr.getDouble("equivalencia"));
-                articulo.setPrecioDeCosto(rr.getDouble("COSTO"));
-                articulo.setStockMinimo(rr.getDouble("MINIMO"));
-                articulo.setStockActual(rr.getDouble("sstock"));
+                articulo.setCodigoAsignado(rr1.getString("ID"));
+                articulo.setDescripcionArticulo(rr1.getString("NOMBRE"));
+                articulo.setNumeroId(rr1.getInt("ID"));
+                articulo.setCodigoDeBarra(rr1.getString("BARRAS"));
+                articulo.setRecargo(rr1.getDouble("recargo"));
+                articulo.setPrecioUnitarioNeto(rr1.getDouble("PRECIO"));
+                articulo.setEquivalencia(rr1.getDouble("equivalencia"));
+                articulo.setPrecioDeCosto(rr1.getDouble("COSTO"));
+                articulo.setStockMinimo(rr1.getDouble("MINIMO"));
+                articulo.setStockActual(rr1.getDouble("sstock"));
                 try{
                     if(Inicio.sucursal.getDireccion().equals("1")){
                         articulo.setPrecioServicio(0.00);
@@ -891,24 +896,25 @@ public class Articulos implements Facturar,Editables,Modificable{
                     articulo.setPrecioServicio(0.00);
                     articulo.setPrecioServicio1(0.00);
                 }
-                articulo.setModificaPrecio(rr.getBoolean("modificaPrecio"));
-                articulo.setModificaServicio(rr.getBoolean("modificaServicio"));
-                String nom=rr.getString("NOMBRE");
-                articulo.setIdCombo(rr.getInt("idcombo"));
-                articulo.setDolar(rr.getDouble("dolar"));
-                articulo.setLista2(rr.getDouble("lista2"));
-                articulo.setLista3(rr.getDouble("lista3"));
-                articulo.setLista4(rr.getDouble("lista4"));
-                articulo.setPrecioLista1(rr.getDouble("pl1"));
-                articulo.setPrecioLista2(rr.getDouble("pl2"));
-                articulo.setPrecioLista3(rr.getDouble("pl3"));
-                articulo.setPrecioLista4(rr.getDouble("pl4"));
-                articulo.setPrecioCosto(rr.getDouble("pcto"));
+                articulo.setModificaPrecio(rr1.getBoolean("modificaPrecio"));
+                articulo.setModificaServicio(rr1.getBoolean("modificaServicio"));
+                String nom=rr1.getString("NOMBRE");
+                articulo.setIdCombo(rr1.getInt("idcombo"));
+                articulo.setDolar(rr1.getDouble("dolar"));
+                articulo.setLista2(rr1.getDouble("lista2"));
+                articulo.setLista3(rr1.getDouble("lista3"));
+                articulo.setLista4(rr1.getDouble("lista4"));
+                articulo.setPrecioLista1(rr1.getDouble("pl1"));
+                articulo.setPrecioLista2(rr1.getDouble("pl2"));
+                articulo.setPrecioLista3(rr1.getDouble("pl3"));
+                articulo.setPrecioLista4(rr1.getDouble("pl4"));
+                articulo.setPrecioCosto(rr1.getDouble("pcto"));
                 
                 if(articulo.getIdCombo() > 0)articulo.setCombo(CargarCombo(articulo.getNumeroId()));
                 resultado.add(articulo);
             }
-            rr.close();
+            rr1.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1061,7 +1067,7 @@ public class Articulos implements Facturar,Editables,Modificable{
         }
         //String sql="insert into articulos (NOMBRE='"+articulo.getDescripcionArticulo()+"',SERVICIO="+articulo.getPrecioServicio()+",COSTO="+articulo.getPrecioDeCosto()+",PRECIO="+articulo.getPrecioUnitarioNeto()+",MINIMO="+articulo.getStockMinimo()+",BARRAS ='"+articulo.getCodigoDeBarra()+"',modificaPrecio="+articulo.getModificaPrecio()+" where ID="+articulo.getNumeroId();
         String sql="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4) values ('"+articulo.getDescripcionArticulo()+"',"+articulo.getPrecioDeCosto()+",round("+articulo.getPrecioUnitarioNeto()+",2),"+articulo.getStockMinimo()+",'"+articulo.getCodigoDeBarra()+"',"+articulo.getModificaPrecio()+","+articulo.getModificaServicio()+","+articulo.getIdCombo()+",3,"+articulo.getRecargo()+",round("+articulo.getDolar()+",2),round("+articulo.getLista2()+",2),round("+articulo.getLista3()+",2),round("+articulo.getLista4()+",2))";
-        Transaccionable tra=new Conecciones();
+        //Transaccionable tra=new Conecciones();
         ch=tra.guardarRegistro(sql);
         sql="select last_insert_id()";
         ResultSet rs=tra.leerConjuntoDeRegistros(sql);
@@ -1097,7 +1103,7 @@ public class Articulos implements Facturar,Editables,Modificable{
         Articulos articulo=(Articulos)objeto;
         Boolean ch=false;
         String sql="update articulos set NOMBRE='"+articulo.getDescripcionArticulo()+"',lista2="+articulo.getLista2()+",lista3="+articulo.getLista3()+",lista4="+articulo.getLista4()+",dolar="+articulo.getDolar()+",COSTO="+articulo.getPrecioDeCosto()+",PRECIO=round("+articulo.getPrecioUnitarioNeto()+",2),MINIMO="+articulo.getStockMinimo()+",BARRAS ='"+articulo.getCodigoDeBarra()+"',modificaPrecio="+articulo.getModificaPrecio()+",modificaServicio="+articulo.getModificaServicio()+",actualizacion=2,idcombo="+articulo.getIdCombo()+",recargo="+articulo.getRecargo()+" where ID="+articulo.getNumeroId();
-        Transaccionable tra=new Conecciones();
+        //Transaccionable tra=new Conecciones();
         ch=tra.guardarRegistro(sql);
         //sql="insert into actualizaciones (iddeposito,idobjeto,estado) values (1,1,2),(2,1,2),(3,1,2),(4,1,2),(5,1,2),(6,1,2),(7,1,2)";
         //tra.guardarRegistro(sql);
@@ -1416,6 +1422,51 @@ public class Articulos implements Facturar,Editables,Modificable{
         }
         
         return articulo;
+    }
+
+    @Override
+    public void NuevoMasivo(ArrayList listado) {
+        Iterator it=listado.listIterator();
+        Articulos articulo;
+        Integer cantt=0;
+        int total=0;
+        String nuevo="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4) values ";
+        while(it.hasNext()){
+            articulo=(Articulos) it.next();
+            //AltaObjeto(artic);
+            nuevo+="('"+articulo.getDescripcionArticulo()+"',"+articulo.getPrecioDeCosto()+",round("+articulo.getPrecioUnitarioNeto()+",2),"+articulo.getStockMinimo()+",'"+articulo.getCodigoDeBarra()+"',"+articulo.getModificaPrecio()+","+articulo.getModificaServicio()+","+articulo.getIdCombo()+",3,"+articulo.getRecargo()+",round("+articulo.getDolar()+",2),round("+articulo.getLista2()+",2),round("+articulo.getLista3()+",2),round("+articulo.getLista4()+",2)),";
+            if(cantt==200){
+                total=nuevo.length();
+                total=total -1;
+                nuevo=nuevo.substring(0,total);
+                tra.guardarRegistro(nuevo);
+                cantt=0;
+                nuevo="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4) values ";
+                total=0;
+            }
+            cantt++;
+        }
+        total=nuevo.length();
+        System.out.println("TOTAL SENTENCIA "+total);
+        total=total -1;
+        nuevo=nuevo.substring(0,total);
+        if(nuevo.length() > 153){
+            tra.guardarRegistro(nuevo);
+        }
+    }
+
+    @Override
+    public void ModificadoMasivo(ArrayList listado) {
+        Iterator it=listado.listIterator();
+        Articulos artic;
+        String modificar="update articulos set ";
+        String ww=" where id in(";
+        while(it.hasNext()){
+            artic=(Articulos) it.next();
+            ModificaionObjeto(artic);
+            //modificar+="nombre=case id when "+artic.getNumeroId()+" then '"+artic.getDescripcionArticulo()+"',barras= case id when "+artic.getNumeroId()+" then '"+artic.getCodigoDeBarra()+"'";
+        }
+        //System.out.println(modificar);
     }
     
     
