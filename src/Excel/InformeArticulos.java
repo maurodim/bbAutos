@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objetos.Articulos;
+import objetos.ConeccionLocal;
+import objetos.Marcas;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -32,9 +34,9 @@ import org.apache.poi.ss.usermodel.IndexedColors;
  * @author mauro di
  */
 public class InformeArticulos {
-  public void GenerarInforme(ArrayList listadoClientes) throws SQLException{
+  public void GenerarInforme(ArrayList listadoC) throws SQLException{
               HSSFWorkbook libro=new HSSFWorkbook();
-        HSSFSheet hoja=libro.createSheet("Listado de Articulos");
+        HSSFSheet hoja;
         ArrayList listadoPorSucursal=new ArrayList();
         Editables edi=new Articulos();
         
@@ -68,15 +70,29 @@ public class InformeArticulos {
         String form=null;
         
         HSSFCellStyle titulo=libro.createCellStyle();
-        Iterator iCli=listadoClientes.listIterator();
+        Iterator iCli=listadoC.listIterator();
         Articulos cliente=new Articulos();
         titulo.setFont(fuente);
         //titulo.setFillBackgroundColor((short)22);
         titulo.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
         titulo.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
         //for(int a=0;a < 100;a++){
+        Marcas marcas;
+        String sql;
+        Transaccionable tra=new ConeccionLocal();
+        ResultSet rs;
+        //Articulos articulo;
+        while(iCli.hasNext()){
+                marcas=(Marcas)iCli.next();
+                hoja=libro.createSheet(marcas.getProveedor()+"-"+marcas.getDescripcion());
         int col=0;
+        sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where marca='"+marcas.getDescripcion()+"' and prov='"+marcas.getProveedor()+"' order by nombre limit 0,65535";
+        System.out.println(sql);
+        rs=tra.leerConjuntoDeRegistros(sql);
         int a=0;
+        while(rs.next()){
+            
+        
             if(a==0){
                 fila=hoja.createRow(a);
             celda=fila.createCell(0);
@@ -90,19 +106,16 @@ public class InformeArticulos {
             celda2.setCellValue("Stock");
             celda3=fila.createCell(3);
             celda3.setCellStyle(titulo);
-            celda3.setCellValue("Stock Mínimo");
+            celda3.setCellValue("Marca/Proveedor");
             celda4=fila.createCell(4);
             celda4.setCellStyle(titulo);
             celda4.setCellValue("Costo");
             celda5=fila.createCell(5);
             celda5.setCellStyle(titulo);
             celda5.setCellValue("Precio de Venta");
-            celda6=fila.createCell(6);
-            celda6.setCellStyle(titulo);
-            celda6.setCellValue("Servicio");
+            
             }
-            while(iCli.hasNext()){
-                cliente=(Articulos)iCli.next();
+            
             a++;
             //col=rs.getInt("tipoMovimiento");
             switch(col){
@@ -118,69 +131,36 @@ public class InformeArticulos {
             ttx=ttx;
             
             celda.setCellType(HSSFCell.CELL_TYPE_STRING);
-            celda.setCellValue(cliente.getCodigoAsignado());
+            celda.setCellValue(rs.getInt("ID"));
             celda1=fila.createCell(1);
             ttx=ttx;
             celda1.setCellType(HSSFCell.CELL_TYPE_STRING);
-            celda1.setCellValue(cliente.getDescripcionArticulo());
+            celda1.setCellValue(rs.getString("NOMBRE"));
             celda2=fila.createCell(2);
             celda2.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-            celda2.setCellValue(cliente.getStockActual());
+            celda2.setCellValue(rs.getDouble("sstock"));
             celda3=fila.createCell(3);
-            celda3.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-            celda3.setCellValue(cliente.getStockMinimo());
+            celda3.setCellType(HSSFCell.CELL_TYPE_STRING);
+            celda3.setCellValue(rs.getString("marca")+"-"+rs.getString("prov"));
             celda4=fila.createCell(4);
             celda4.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-            celda4.setCellValue(cliente.getPrecioDeCosto());
+            celda4.setCellValue(rs.getDouble("costo"));
             
            
             celda5=fila.createCell(5);
             //celda5.setCellFormula(rs.getString("observaciones"));
             celda5.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-            celda5.setCellValue(cliente.getPrecioUnitarioNeto());
+            celda5.setCellValue(rs.getDouble("precio"));
             //celda5.setCellValue(rs.getDate("fecha"));
-            celda6=fila.createCell(6);
-            //celda5.setCellFormula(rs.getString("observaciones"));
-            celda6.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-            celda6.setCellValue(cliente.getPrecioServicio());
-            listadoPorSucursal=edi.ListarPorSucursal(cliente);
-            Iterator il=listadoPorSucursal.listIterator();
-            Articulos arr=new Articulos();
-            int cont=0;
-            while(il.hasNext()){
-                arr=(Articulos)il.next();
-                cont++;
-                switch (cont){
-                
-                    case 1:
-                        celda7=fila.createCell(7);
-                celda7.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-                celda7.setCellValue(arr.getCantidad());
-                        break;
-                    case 2:
-                        celda8=fila.createCell(8);
-                celda8.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-                celda8.setCellValue(arr.getCantidad());
-                        break;
-                    case 3:
-                        celda9=fila.createCell(9);
-                celda9.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-                celda9.setCellValue(arr.getCantidad());
-                        break;
-                    case 4:
-                        celda10=fila.createCell(10);
-                celda10.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-                celda10.setCellValue(arr.getCantidad());
-                        break;
-                }
-                
-            }
+            
+           
         }
-          
+        }
+         //FIN LIBRO 
             
         
         //texto+="\r\n";
-        String ruta="C://Informes//listadoDeArticulos.xls";
+        String ruta="Informes\\listadoDeArticulos.xls";
         try {
             FileOutputStream elFichero=new FileOutputStream(ruta);
             try {

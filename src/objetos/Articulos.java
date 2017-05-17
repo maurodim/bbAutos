@@ -1430,18 +1430,18 @@ public class Articulos implements Facturar,Editables,Modificable{
         Articulos articulo;
         Integer cantt=0;
         int total=0;
-        String nuevo="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4) values ";
+        String nuevo="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4,marca,prov) values ";
         while(it.hasNext()){
             articulo=(Articulos) it.next();
             //AltaObjeto(artic);
-            nuevo+="('"+articulo.getDescripcionArticulo()+"',"+articulo.getPrecioDeCosto()+",round("+articulo.getPrecioUnitarioNeto()+",2),"+articulo.getStockMinimo()+",'"+articulo.getCodigoDeBarra()+"',"+articulo.getModificaPrecio()+","+articulo.getModificaServicio()+","+articulo.getIdCombo()+",3,"+articulo.getRecargo()+",round("+articulo.getDolar()+",2),round("+articulo.getLista2()+",2),round("+articulo.getLista3()+",2),round("+articulo.getLista4()+",2)),";
+            nuevo+="('"+articulo.getDescripcionArticulo()+"',"+articulo.getPrecioDeCosto()+",round("+articulo.getPrecioUnitarioNeto()+",2),"+articulo.getStockMinimo()+",'"+articulo.getCodigoDeBarra()+"',"+articulo.getModificaPrecio()+","+articulo.getModificaServicio()+","+articulo.getIdCombo()+",3,"+articulo.getRecargo()+",round("+articulo.getDolar()+",2),round("+articulo.getLista2()+",2),round("+articulo.getLista3()+",2),round("+articulo.getLista4()+",2),'"+articulo.getMarca()+"','"+articulo.getProveedor()+"'),";
             if(cantt==200){
                 total=nuevo.length();
                 total=total -1;
                 nuevo=nuevo.substring(0,total);
                 tra.guardarRegistro(nuevo);
                 cantt=0;
-                nuevo="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4) values ";
+                nuevo="insert into articulos (NOMBRE,COSTO,PRECIO,MINIMO,BARRAS,modificaPrecio,modificaServicio,idcombo,actualizacion,recargo,dolar,lista2,lista3,lista4,marca,prov) values ";
                 total=0;
             }
             cantt++;

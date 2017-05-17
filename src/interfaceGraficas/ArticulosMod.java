@@ -519,6 +519,7 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         this.jLabel9.setText("Se genera un mov de cantidades");
         this.jTextField8.selectAll();
         this.jTextField8.requestFocus();
+        //this.jButton3.setVisible(false);
         this.jButton3.setEnabled(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -552,6 +553,7 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         }
         arti.setIdDeposito(deposito);
         if(editable.MovimientoDeAjusteDeCantidades(arti, ajuste,this.jTextArea1.getText()));
+        this.jButton4.setEnabled(false);
         
     }//GEN-LAST:event_jButton4ActionPerformed
 

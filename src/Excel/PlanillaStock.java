@@ -6,15 +6,17 @@
 package Excel;
 
 import interfaces.Editables;
+import interfaces.Transaccionable;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objetos.Articulos;
+import objetos.ConeccionLocal;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -28,7 +30,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
  * @author mauro di
  */
 public class PlanillaStock {
- public void GenerarInforme(ArrayList  listadoClientes) throws SQLException{
+ public void GenerarInforme() throws SQLException{
               HSSFWorkbook libro=new HSSFWorkbook();
         HSSFSheet hoja=libro.createSheet("Listado de Articulos");
         ArrayList listadoPorSucursal=new ArrayList();
@@ -65,7 +67,7 @@ public class PlanillaStock {
         
         HSSFCellStyle titulo=libro.createCellStyle();
        //Iterator iCli=listadoClientes.listIterator();
-        Articulos cliente=new Articulos();
+        Articulos cliente;
         titulo.setFont(fuente);
         //titulo.setFillBackgroundColor((short)22);
         titulo.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
@@ -79,60 +81,61 @@ public class PlanillaStock {
         celdas.setLeftBorderColor(IndexedColors.BLACK.getIndex());
         celdas.setRightBorderColor(IndexedColors.BLACK.getIndex());
         celdas.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        int a=0;
+        String sql="select *,(select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo,numeroDeposito limit 0,1)as sstock,round((articulos.dolar * articulos.PRECIO),2)as pl1,round((articulos.dolar * articulos.lista2),2)as pl2,round((articulos.dolar * articulos.lista3),2)as pl3,round((articulos.lista4 * articulos.dolar),2)as pl4,round((articulos.dolar * articulos.COSTO),2)as pcto from articulos where (select sum(cantidad) FROM movimientosarticulos where movimientosarticulos.idArticulo=articulos.ID group by idArticulo limit 0,1) > 0 order by sstock desc";
         
-        for(int a=0;a < listadoClientes.size();a++){
+        Transaccionable tra1=new ConeccionLocal();
+        ResultSet rr1=tra1.leerConjuntoDeRegistros(sql);
+        //Facturar fact=new Articulos();
+        //ArrayList listadoClientes=fact.listadoBusqueda("");
+        System.out.println("cantidad registros "+rr1.getRow());
+        while (rr1.next()){
         int col=0;
         //int a=0;
             if(a==0){
-                fila=hoja.createRow(a);
-            celda=fila.createCell(0);
-            celda.setCellStyle(titulo);
-            celda.setCellValue("Codigo");
-            celda1=fila.createCell(1);
-            celda1.setCellStyle(titulo);
-            celda1.setCellValue("Descripcion");
-            celda2=fila.createCell(2);
-            celda2.setCellStyle(titulo);
-            celda2.setCellValue("Cantidad");
-            celda3=fila.createCell(3);
-            celda3.setCellStyle(titulo);
-            celda3.setCellValue("Cantidad");
-            celda4=fila.createCell(4);
-            celda4.setCellStyle(titulo);
-            celda4.setCellValue("Cantidad");
-            celda5=fila.createCell(5);
-            celda5.setCellStyle(titulo);
-            celda5.setCellValue("Cantidad");
-            celda6=fila.createCell(6);
-            celda6.setCellStyle(titulo);
-            celda6.setCellValue("Cantidad");
-            }else{
-            cliente=(Articulos)listadoClientes.get(a);
+                    fila=hoja.createRow(a);
+                celda=fila.createCell(0);
+                celda.setCellStyle(titulo);
+                celda.setCellValue("Codigo");
+                celda1=fila.createCell(1);
+                celda1.setCellStyle(titulo);
+                celda1.setCellValue("Descripcion");
+                celda2=fila.createCell(2);
+                celda2.setCellStyle(titulo);
+                celda2.setCellValue("cod. barras");
+                celda3=fila.createCell(3);
+                celda3.setCellStyle(titulo);
+                celda3.setCellValue("Cantidad");
+                
+                a++;
+            }
+               // cliente=new Articulos();
+            //cliente=(Articulos)listadoClientes.get(a);
             fila=hoja.createRow(a);
             celda=fila.createCell(0);
             ttx=ttx;
             celda.setCellStyle(celdas);
             celda.setCellType(HSSFCell.CELL_TYPE_STRING);
-            celda.setCellValue(cliente.getCodigoAsignado());
+            celda.setCellValue(rr1.getString("ID"));
             
             
             celda1=fila.createCell(1);
             ttx=ttx;
             celda1.setCellStyle(celdas);
             celda1.setCellType(HSSFCell.CELL_TYPE_STRING);
-            celda1.setCellValue(cliente.getDescripcionArticulo());
+            celda1.setCellValue(rr1.getString("NOMBRE"));
             
             
             celda2=fila.createCell(2);
             celda2.setCellStyle(celdas);
             celda2.setCellType(HSSFCell.CELL_TYPE_STRING);
-            celda2.setCellValue("");
+            celda2.setCellValue(rr1.getString("BARRAS"));
             
             
             celda3=fila.createCell(3);
             celda3.setCellStyle(celdas);
-            celda3.setCellType(HSSFCell.CELL_TYPE_STRING);
-            celda3.setCellValue("");
+            celda3.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+            celda3.setCellValue(rr1.getDouble("sstock"));
             
             
             celda4=fila.createCell(4);
@@ -157,10 +160,13 @@ public class PlanillaStock {
             //listadoPorSucursal=edi.ListarPorSucursal(cliente);
             //Iterator il=listadoPorSucursal.listIterator();
             
-            }
+            
+            a++;
         }
+        rr1.close();
+        
              
-                       String ruta="C://Informes//planillaStock.xls";
+                       String ruta="Informes\\planillaStock.xls";
         try {
             FileOutputStream elFichero=new FileOutputStream(ruta);
             try {

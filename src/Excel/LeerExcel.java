@@ -150,7 +150,7 @@ private void printToConsole(List cellDataList)
         Double precio4=null;
         Double costo=null;
         String talle=null;
-        String sentencia="insert into articulos (BARRAS,NOMBRE,SERVICIO,COSTO,PRECIO,lista2,lista3,lista4) value ";
+        String sentencia="insert into articulos (BARRAS,NOMBRE,SERVICIO,COSTO,PRECIO,lista2,lista3,lista4,marca,prov) value ";
        ColumnasExcel col1; 
        ColumnasExcel col2; 
        ColumnasExcel col3; 

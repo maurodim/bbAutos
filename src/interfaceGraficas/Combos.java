@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import objetos.Articulos;
+import tablas.MiModeloTablaArticulos;
 
 /**
  *
@@ -210,20 +211,64 @@ public class Combos extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 private void cargarLista(ArrayList lista){
-    DefaultListModel modelo=new DefaultListModel();
+    MiModeloTablaArticulos modelArticulos=new MiModeloTablaArticulos();
     Iterator il=lista.listIterator();
-    Articulos art=new Articulos();
+    Articulos articulos;
+    /*
+    MiModeloTablaArticulos modelArticulos=new MiModeloTablaArticulos();
+Facturar fact=new Articulos();
+listadoA=fact.listadoBusqueda("");
+Iterator list=listadoA.listIterator();
+jTable1.setModel(modelArticulos);
+modelArticulos.addColumn("CODIGO");
+modelArticulos.addColumn("DESCRIPCION");
+modelArticulos.addColumn("STOCK");
+modelArticulos.addColumn("STOCK MIN");
+modelArticulos.addColumn("COSTO");
+modelArticulos.addColumn("P. VENTA");
+modelArticulos.addColumn("SERVICIO");
+        Object[] fila=new Object[7];
+while(list.hasNext()){
+    Articulos articulos=(Articulos)list.next();
+    fila[0]=articulos.getCodigoAsignado();
+fila[1]=articulos.getDescripcionArticulo();
+fila[2]=articulos.getStockActual();
+fila[3]=articulos.getStockMinimo();
+fila[4]=articulos.getPrecioDeCosto();
+fila[5]=articulos.getPrecioUnitarioNeto();
+fila[6]=articulos.getPrecioServicio();
+modelArticulos.addRow(fila);
+}
+
+    
+    */
+    modelArticulos.addColumn("CODIGO");
+    modelArticulos.addColumn("DESCRIPCION");
+    modelArticulos.addColumn("STOCK");
+    
+    modelArticulos.addColumn("COSTO");
+    modelArticulos.addColumn("P. VENTA");
+    modelArticulos.addColumn("SERVICIO");
+        Object[] fila=new Object[6];
+
     while(il.hasNext()){
-        art=(Articulos)il.next();
-        //System.out.println("DESCRIPCION "+art.getDescripcionArticulo());
-        modelo.addElement(art.getCodigoAsignado()+" "+art.getDescripcionArticulo());
+        articulos=(Articulos) il.next();
+        fila[0]=articulos.getCodigoAsignado();
+        fila[1]=articulos.getDescripcionArticulo();
+        fila[2]=articulos.getStockActual();
+        
+        fila[4]=articulos.getPrecioDeCosto();
+        fila[5]=articulos.getPrecioUnitarioNeto();
+        fila[6]=articulos.getPrecioServicio();
+        modelArticulos.addRow(fila);
     }
     ListadoDeArticulos1 listadoDeArt=new ListadoDeArticulos1();
-    listadoDeArt.jList1.setModel(modelo);
+    listadoDeArt.jTable1.setModel(modelArticulos);
     listadoDeArt.setVisible(true);
-    listadoDeArt.jList1.requestFocus();
-    int posicion=listadoDeArt.jList1.getSelectedIndex();
+    listadoDeArt.jTable1.requestFocus();
+    int posicion=listadoDeArt.jTable1.getSelectedRow();
     articulo=(Articulos)lista.get(posicion);
+    //articulo=(Articulos)lista.get(posicion);
     //System.out.println(" codigo elegido "+articulo.getCodigoAsignado());
         
     this.jTextField1.setText(articulo.getCodigoDeBarra());
