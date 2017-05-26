@@ -214,17 +214,43 @@ public class ArticulosAbm extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jTextField2KeyPressed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        InformeArticulos informe=new InformeArticulos();
+        //InformeArticulos informe=new InformeArticulos();
         Marcas marc=new Marcas();
-        listadoA=marc.listar();
-        try {
-            informe.GenerarInforme(listadoA);
-        } catch (SQLException ex) {
-            Logger.getLogger(ArticulosAbm.class.getName()).log(Level.SEVERE, null, ex);
+        OpcionesExcel opcion=new OpcionesExcel();
+        opcion.setVisible(true);
+        String filt;
+        if(opcion.jRadioButton3.isSelected()){
+            listadoA=marc.listar();
+            emitirInformeMarcas();
+        }else{
+            if(opcion.jRadioButton2.isSelected()){
+                filt=opcion.jTextField1.getText();
+                listadoA=marc.filtrar(filt);
+                emitirInformeMarcas();
+            }
+            if(opcion.jRadioButton1.isSelected()){
+                filt=opcion.jTextField1.getText();
+                emitirInformeProveedor(filt);
+            }
         }
         
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    private void emitirInformeMarcas(){
+        InformeArticulos informe=new InformeArticulos();
+        try {
+                informe.GenerarInforme(listadoA);
+            } catch (SQLException ex) {
+                Logger.getLogger(ArticulosAbm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+    private void emitirInformeProveedor(String fill){
+        InformeArticulos informe=new InformeArticulos();
+        try {
+                informe.GenerarInformeProveedor(fill);
+            } catch (SQLException ex) {
+                Logger.getLogger(ArticulosAbm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         PlanillaStock planilla=new PlanillaStock();
         //Facturar fact=new Articulos();

@@ -189,7 +189,7 @@ private void cargarLista(){
     //caaj=(Cajas)Cajas.getListadoCajas().get(posic);
     moviC=(MovimientosClientes) listadoMov.get(posic);
     
-    modelo=cajea.LeerComprobante(moviC.getId(),moviC.getTipoComprobante(),moviC.getTipoComprobante());
+    modelo=cajea.LeerComprobante(moviC.getNumeroComprobante(),moviC.getTipoComprobante(),moviC.getTipoComprobante());
     
     ListadoComprobantesClientes listadoDeArticulos=new ListadoComprobantesClientes(caaj);
     listadoDeArticulos.jList1.setModel(modelo);

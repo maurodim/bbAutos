@@ -541,7 +541,7 @@ public class CajaAbm extends javax.swing.JInternalFrame {
     int posic=this.jTable1.getSelectedRow();
     Cajas caaj=new Cajas();
     caaj=(Cajas)Cajas.getListadoCajas().get(posic);
-    modelo=cajea.LeerComprobante(caaj.getIdMovimiento(),caaj.getTipoDeComprobante(),caaj.getTipoMovimiento());
+    modelo=cajea.LeerComprobante(caaj.getNumeroDeComprobante(),caaj.getTipoDeComprobante(),caaj.getTipoMovimiento());
     
     ListadoComprobantes listadoDeArticulos=new ListadoComprobantes(caaj);
     listadoDeArticulos.jList1.setModel(modelo);

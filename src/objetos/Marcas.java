@@ -56,5 +56,25 @@ public class Marcas {
         
         return lst;
     }
+    public ArrayList filtrar(String filtro){
+        ArrayList lst=new ArrayList();
+        Transaccionable tra=new ConeccionLocal();
+        ResultSet rs;
+        String sql="select marca,prov from articulos where marca like '%"+filtro+"%' group by marca,prov";
+        rs=tra.leerConjuntoDeRegistros(sql);
+        try {
+            while(rs.next()){
+                Marcas marca=new Marcas();
+                marca.setDescripcion(rs.getString("marca"));
+                marca.setProveedor(rs.getString("prov"));
+                lst.add(marca);
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Marcas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return lst;
+    }
     
 }
