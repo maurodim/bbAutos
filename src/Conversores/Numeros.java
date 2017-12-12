@@ -142,4 +142,9 @@ public class Numeros {
         //coe=coe + 1;
         return coe;
     }
+    public static String ConvetirDoubleAString(Double num){
+        DecimalFormat formato=new DecimalFormat("####.00");
+        doble=formato.format(num);
+        return doble;
+    }
 }

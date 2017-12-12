@@ -247,7 +247,7 @@ public class MovimientosClientes implements Movible,Editables{
     }
 
     @Override
-    public Boolean AltaObjeto(Object objeto) {
+    public Integer AltaObjeto(Object objeto) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -329,8 +329,9 @@ modelArticulos.addRow(fila);
     
     modelArticulos.addColumn("COSTO");
     modelArticulos.addColumn("P. VENTA");
+    modelArticulos.addColumn("Modifica Precio?");
     //modelArticulos.addColumn("SERVICIO");
-        Object[] fila=new Object[6];
+        Object[] fila=new Object[7];
 
     while(il.hasNext()){
         articulos=(Articulos) il.next();
@@ -341,10 +342,11 @@ modelArticulos.addRow(fila);
         
         fila[4]=articulos.getPrecioDeCosto();
         fila[5]=articulos.getPrecioUnitarioNeto();
+        fila[6]=articulos.getModificaPrecio();
         //fila[6]=articulos.getPrecioServicio();
         modelArticulos.addRow(fila);
     }
-    ListadoDeArticulos1 listadoDeArt=new ListadoDeArticulos1();
+    ListadoDeArticulos1 listadoDeArt=new ListadoDeArticulos1(lista);
     listadoDeArt.jTable1.setModel(modelArticulos);
     listadoDeArt.setVisible(true);
     listadoDeArt.jTable1.requestFocus();

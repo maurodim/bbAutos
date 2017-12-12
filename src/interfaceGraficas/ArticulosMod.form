@@ -73,7 +73,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jTextField4" min="-2" pref="123" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jLabel15" pref="136" max="32767" attributes="0"/>
+                          <Component id="jLabel15" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
@@ -477,7 +477,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
-            <Property name="text" type="java.lang.String" value="jLabel15"/>
+            <Property name="text" type="java.lang.String" value="Presione enter para calcular venta"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel16">

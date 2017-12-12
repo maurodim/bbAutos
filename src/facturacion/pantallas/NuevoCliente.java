@@ -4,12 +4,16 @@
  */
 package facturacion.pantallas;
 
+
 import facturacion.clientes.ClientesTango;
 import facturacion.clientes.ListasDePrecios;
 import interfaces.Personalizable;
+import interfacesPrograma.Busquedas;
 import interfacesPrograma.Facturar;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.swing.DefaultComboBoxModel;
+
 
 /**
  *
@@ -58,7 +62,7 @@ public class NuevoCliente extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Cond Iva:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Efectivo", "Cuenta Corriente" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Consumidor Final", "Responsable Inscripto", "Exento" }));
 
         jLabel4.setText("N° de CUIT:");
 
@@ -167,11 +171,19 @@ public class NuevoCliente extends javax.swing.JInternalFrame {
        cli.setRazonSocial(this.jTextField1.getText());
        cli.setDireccion(this.jTextField2.getText());
        String condicion=null;
-       int condicion1=0;
-       if(this.jComboBox1.getSelectedIndex()==0){
-           
-       }else{
-           condicion1=1;
+       switch (this.jComboBox1.getSelectedIndex()){
+           case 1:
+               condicion="2";
+               break;
+           case 2:
+               condicion="3";
+               break;
+           case 3:
+               condicion="4";
+               break;
+           default:
+               condicion="1";
+               break;
        }
        if(this.jComboBox1.getSelectedIndex() < 4){
            cli.setEmpresa("sd");
@@ -180,19 +192,43 @@ public class NuevoCliente extends javax.swing.JInternalFrame {
        }
        ListasDePrecios lista=new ListasDePrecios();
        int posLista=this.jComboBox2.getSelectedIndex();
-       posLista++;
-       cli.setListaDePrecios(posLista);
-       cli.setCondicionDeVenta(condicion1);
-       cli.setCoeficienteListaDeprecios(1.00);
-       cli.setCondicionIva("1");
+       if(posLista < 0)posLista=0;
+       lista=(ListasDePrecios)listadoL.get(posLista);
+       cli.setListaDePrecios(lista.getNumeroLista());
+       cli.setCondicionDeVenta(lista.getNumeroLista());
+       cli.setCoeficienteListaDeprecios(lista.getPorcentaje());
+       cli.setCondicionIva(condicion);
        cli.setNumeroDeCuit(this.jTextField3.getText());
        cli.setTelefono(this.jTextField4.getText());
        Facturar fact=new ClientesTango();
-        fact.guardarNuevoCliente(cli);
+       Integer id=fact.guardarNuevoCliente(cli);
+       //fact.guardarNuevoCliente(cli);
+       cli.setCodigoId(id);
        IngresoDePedidos.jCheckBox2.setSelected(true);
        IngresoDePedidos.jCheckBox2.setEnabled(false);
        IngresoDePedidos.cliT=cli;
-       IngresoDePedidos.jLabel10.setText(cli.getRazonSocial());
+       IngresoDePedidos.jTextField5.setText(cli.getRazonSocial());
+       IngresoDePedidos.jTextField6.setText(cli.getDireccion());
+       IngresoDePedidos.jTextField8.setText(cli.getTelefono());
+       IngresoDePedidos.jTextField7.setText(cli.getNumeroDeCuit());
+       DefaultComboBoxModel combM=new DefaultComboBoxModel();
+        Busquedas licB=new ClientesTango();
+        ArrayList  listadoClientes=licB.listar("");
+        Iterator itC=listadoClientes.listIterator();
+        int seleccion=0;
+        ClientesTango cliente;
+        int a=0;
+        while(itC.hasNext()){
+            cliente=(ClientesTango) itC.next();
+
+            //if(cliente.getCodigoId()== id)seleccion=a;
+            combM.addElement(cliente.getRazonSocial());
+           // a++;
+        }
+        IngresoDePedidos.jComboBox1.setModel(combM);
+        //this.jComboBox1.setSelectedIndex(seleccion);
+        //IngresoDePedidos.jComboBox2.setSelectedIndex(this.jComboBox1.getSelectedIndex());
+       
        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

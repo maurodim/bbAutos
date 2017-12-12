@@ -119,7 +119,7 @@ public class ListasDePrecios implements Editables{
     }
 
     @Override
-    public Boolean AltaObjeto(Object objeto) {
+    public Integer AltaObjeto(Object objeto) {
         ListasDePrecios listaDePrecios=(ListasDePrecios)objeto;
         Boolean verif=true;
         Transaccionable tra=new Conecciones();
@@ -128,7 +128,7 @@ public class ListasDePrecios implements Editables{
         String sql="insert into coeficienteslistas (coeficiente,descripcion) values ("+coe+",'"+listaDePrecios.getDesccripcion()+"')";
         tra.guardarRegistro(sql);
         cargarMap();
-        return verif;
+        return 0;
     }
 
     @Override

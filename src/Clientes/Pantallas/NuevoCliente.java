@@ -205,7 +205,7 @@ public class NuevoCliente extends javax.swing.JInternalFrame {
        IngresoDePedidos.jCheckBox2.setSelected(true);
        IngresoDePedidos.jCheckBox2.setEnabled(false);
        IngresoDePedidos.cliT=cli;
-       IngresoDePedidos.jLabel10.setText(cli.getRazonSocial());
+       IngresoDePedidos.jTextField5.setText(cli.getRazonSocial());
        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

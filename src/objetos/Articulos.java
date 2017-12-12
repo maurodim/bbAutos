@@ -4,8 +4,6 @@
  */
 package objetos;
 
-import Conversores.Numeros;
-import com.mysql.jdbc.CommunicationsException;
 import interfaceGraficas.Inicio;
 import interfaces.Editables;
 import interfaces.Modificable;
@@ -15,13 +13,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -949,7 +944,7 @@ public class Articulos implements Facturar,Editables,Modificable{
     }
 
     @Override
-    public Boolean guardarNuevoCliente(Object cliente) {
+    public Integer guardarNuevoCliente(Object cliente) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -1056,7 +1051,7 @@ public class Articulos implements Facturar,Editables,Modificable{
     }
 
     @Override
-    public Boolean AltaObjeto(Object objeto) {
+    public Integer AltaObjeto(Object objeto) {
         Articulos articulo=(Articulos)objeto;
         Boolean ch=false;
         if(articulo.getModificaPrecio() !=null){
@@ -1080,10 +1075,9 @@ public class Articulos implements Facturar,Editables,Modificable{
         } catch (SQLException ex) {
             Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(articulo.getCodigoDeBarra() != ""){
-        }else{
-            sql="update articulos set barras="+ultimoArt+" where id="+ultimoArt;
-            tra.guardarRegistro(sql);
+        if(articulo.getCodigoDeBarra().equals("")){
+          sql="update articulos set barras="+ultimoArt+" where id="+ultimoArt;
+            tra.guardarRegistro(sql);  
         }
         if(articulo.getIdCombo() > 0){
             Articulos art=new Articulos();
@@ -1095,7 +1089,7 @@ public class Articulos implements Facturar,Editables,Modificable{
             }
         }
         
-        return ch;
+        return ultimoArt;
     }
 
     @Override
@@ -1150,7 +1144,7 @@ public class Articulos implements Facturar,Editables,Modificable{
         Articulos articulo=(Articulos)objeto;
         Boolean verif=false;
         
-        String sql="insert into movimientosarticulos (tipoMovimiento,idArticulo,cantidad,numeroDeposito,tipoComprobante,numeroComprobante,numeroCliente,fechaComprobante,numerousuario,precioDeCosto,precioDeVenta,precioServicio,observaciones,idcaja) values (14,"+articulo.getNumeroId()+","+cantidadMovimiento+","+articulo.getIdDeposito()+",18,(select tipocomprobantes.numeroActivo + 1 from tipocomprobantes where tipocomprobantes.numero=18),1,'"+Inicio.fechaDia+"',"+Inicio.usuario.getNumeroId()+","+articulo.getPrecioDeCosto()+","+articulo.getPrecioUnitarioNeto()+","+articulo.getPrecioServicio()+",'"+observaciones+"',"+Inicio.caja.getNumero()+")";
+        String sql="insert into movimientosarticulos (tipoMovimiento,idArticulo,cantidad,numeroDeposito,tipoComprobante,numeroComprobante,numeroCliente,fechaComprobante,numerousuario,precioDeCosto,precioDeVenta,precioServicio,idcaja) values (14,"+articulo.getNumeroId()+","+cantidadMovimiento+","+articulo.getIdDeposito()+",18,(select tipocomprobantes.numeroActivo + 1 from tipocomprobantes where tipocomprobantes.numero=18),1,'"+Inicio.fechaDia+"',"+Inicio.usuario.getNumeroId()+","+articulo.getPrecioDeCosto()+","+articulo.getPrecioUnitarioNeto()+","+articulo.getPrecioServicio()+","+Inicio.caja.getNumero()+")";
         Transaccionable tra=new Conecciones();
         verif=tra.guardarRegistro(sql);
         sql="update tipocomprobantes set numeroActivo=numeroActivo + 1 where numero=18";

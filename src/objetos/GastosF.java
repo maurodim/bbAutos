@@ -121,17 +121,18 @@ public class GastosF implements Editables{
         }
     }
     @Override
-    public Boolean AltaObjeto(Object objeto) {
+    public Integer AltaObjeto(Object objeto) {
         Boolean verif=false;
         GastosF gastos=(GastosF)objeto;
         String fecha=Numeros.ConvertirFecha(gastos.getFechaVencimiento());
         String sql="insert into movimientosgastosfijos (idProveedor,monto,fechaVencimiento,numeroFactura) values ("+gastos.getProveedor().getNumero()+","+gastos.getMonto()+",'"+fecha+"','"+gastos.getNumeroFactura()+"')";
         Transaccionable tra=new Conecciones();
+        Integer id=0;
         if(tra.guardarRegistro(sql)){
             verif=true;
             sql="select LAST_INSERT_ID()";
             ResultSet rs=tra.leerConjuntoDeRegistros(sql);
-            Integer id=0;
+            
             try {
                 while(rs.next()){
                 id=rs.getInt(1);
@@ -146,7 +147,7 @@ public class GastosF implements Editables{
             listadoVencimientos.put(id, gastos);
         }
         
-        return verif;
+        return id;
     }
 
     @Override

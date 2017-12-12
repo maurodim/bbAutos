@@ -625,7 +625,7 @@ public class ClientesTango implements Busquedas,Facturar,Adeudable{
     }
 
     @Override
-    public Boolean guardarNuevoCliente(Object cliente) {
+    public Integer guardarNuevoCliente(Object cliente) {
         ClientesTango cli=(ClientesTango)cliente;
         Boolean resultado=false;
         Transaccionable tra=new Conecciones();
@@ -647,7 +647,7 @@ public class ClientesTango implements Busquedas,Facturar,Adeudable{
           sql="update listcli set codmmd="+ultimoArt+" where id="+ultimoArt;
           tra.guardarRegistro(sql);
         
-        return resultado;
+        return ultimoArt;
     }
 
     @Override

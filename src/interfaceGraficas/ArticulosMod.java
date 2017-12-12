@@ -5,6 +5,7 @@
 package interfaceGraficas;
 
 import Conversores.Numeros;
+import facturacion.pantallas.IngresoDePedidos;
 import interfaces.Editables;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
     public static ArrayList combo;
     private ArrayList lstPorSuc=new ArrayList();
     private Double recargo;
+    private int facc;
 
     public ArticulosMod(Articulos art) {
         arti=art;
@@ -78,8 +80,17 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         this.jPanel2.setVisible(false);
         this.jTextField7.requestFocus();
         accion=1;
+        facc=0;
     }
-
+    public ArticulosMod(int fact){
+        initComponents();
+        combo=new ArrayList();
+        this.setTitle("CARGA DE NUEVO ARTICULO");
+        this.jPanel2.setVisible(false);
+        this.jTextField7.requestFocus();
+        accion=1;
+        facc=fact;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -321,7 +332,7 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         jTextField11.setText("0");
         jTextField11.setEnabled(false);
 
-        jLabel15.setText("jLabel15");
+        jLabel15.setText("Presione enter para calcular venta");
 
         jLabel16.setText("jLabel16");
 
@@ -359,7 +370,7 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
+                        .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jTextField11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
@@ -504,7 +515,11 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
         if(accion==2){
             edit.ModificaionObjeto(arti);
         }else{
-            edit.AltaObjeto(arti);
+            Integer id=edit.AltaObjeto(arti);
+            if(facc > 0){
+                IngresoDePedidos.jTextField1.setText(String.valueOf(id));
+                IngresoDePedidos.jTextField1.requestFocus();
+            }
         }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -614,7 +629,13 @@ public class ArticulosMod extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jComboBox1FocusLost
 
     private void jTextField4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField4KeyPressed
-        
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            Double costo=Double.parseDouble(this.jTextField4.getText());
+            Double venta=costo * 1.5;
+            this.jTextField5.setText(String.valueOf(venta));
+            this.jTextField5.selectAll();
+            this.jTextField5.requestFocus();
+        }
     }//GEN-LAST:event_jTextField4KeyPressed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

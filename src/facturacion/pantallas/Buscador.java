@@ -1,11 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaceGraficas;
+package facturacion.pantallas;
 
-import Conversores.Numeros;
-import interfaces.Editables;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import objetos.Articulos;
@@ -14,25 +13,21 @@ import objetos.Articulos;
  *
  * @author mauro
  */
-public class ListadoDeArticulos1 extends javax.swing.JDialog {
-    private ArrayList listaA;
-    /**
-     * Creates new form ListadoDeArticulos
-     */
-    public ListadoDeArticulos1(java.awt.Frame parent, boolean modal) {
+public class Buscador extends javax.swing.JDialog {
+
+    private ArrayList busquedaL;
+    
+    public Buscador(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        listaA=new ArrayList();
         initComponents();
     }
 
-    ListadoDeArticulos1() {
-        listaA=new ArrayList();
+    public Buscador(ArrayList listado) {
+        busquedaL=listado;
         initComponents();
     }
-    ListadoDeArticulos1(ArrayList listado) {
-        initComponents();
-        listaA=listado;
-    }
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,12 +38,11 @@ public class ListadoDeArticulos1 extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Listado de Articulos");
-        setModal(true);
+        setTitle("Buscador de Artículos");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -71,7 +65,7 @@ public class ListadoDeArticulos1 extends javax.swing.JDialog {
                 jTable1KeyPressed(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -79,14 +73,15 @@ public class ListadoDeArticulos1 extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -109,37 +104,28 @@ public class ListadoDeArticulos1 extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        //this.dispose();
-    }//GEN-LAST:event_jTable1MouseClicked
-
     private void jTable1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_ENTER){
-            int renglon=jTable1.getSelectedRow();
-            //int columna=jTable1.getSelectedColumn();
-            Articulos articulo=(Articulos) listaA.get(renglon);
-            System.out.println(jTable1.getValueAt(renglon,1));
-            articulo.setCodigoDeBarra((String) jTable1.getValueAt(renglon, 1));
-            articulo.setDescripcionArticulo((String) jTable1.getValueAt(renglon,2));
-            Double stock=Double.parseDouble((String)jTable1.getValueAt(renglon,3));
-            Double antiguo=articulo.getStockActual();
-            Double ajuste=stock - antiguo;
-            if(ajuste != 0){
-                Editables editable=new Articulos();
-                articulo.setIdDeposito(1);
-                if(editable.MovimientoDeAjusteDeCantidades(articulo, ajuste,"ajuste de stock"));
-            }
-            Double costo=Numeros.ConvertirStringADouble((String)jTable1.getValueAt(renglon,4));
-            Double venta=Numeros.ConvertirStringADouble((String) jTable1.getValueAt(renglon,5));
-            articulo.setPrecioCosto(costo);
-            articulo.setPrecioUnitarioNeto(venta);
-            
-            Editables edit=new Articulos();
-        
-            edit.ModificaionObjeto(articulo);
-        }
+        int posicion=this.jTable1.getSelectedRow();
+        Articulos articulo=new Articulos();
+        articulo=(Articulos)busquedaL.get(posicion);
+        IngresoDePedidos.jTextField1.setText(articulo.getCodigoDeBarra());
+        IngresoDePedidos.jTextField1.selectAll();
+        IngresoDePedidos.jTextField1.requestFocus();
+        this.dispose();
+    }
         
     }//GEN-LAST:event_jTable1KeyPressed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int posicion=this.jTable1.getSelectedRow();
+        Articulos articulo=new Articulos();
+        articulo=(Articulos)busquedaL.get(posicion);
+        IngresoDePedidos.jTextField1.setText(articulo.getCodigoDeBarra());
+        IngresoDePedidos.jTextField1.selectAll();
+        IngresoDePedidos.jTextField1.requestFocus();
+        this.dispose();
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -158,20 +144,21 @@ public class ListadoDeArticulos1 extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ListadoDeArticulos1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buscador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ListadoDeArticulos1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buscador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ListadoDeArticulos1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buscador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ListadoDeArticulos1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buscador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ListadoDeArticulos1 dialog = new ListadoDeArticulos1(new javax.swing.JFrame(), true);
+                Buscador dialog = new Buscador(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -182,9 +169,10 @@ public class ListadoDeArticulos1 extends javax.swing.JDialog {
             }
         });
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
