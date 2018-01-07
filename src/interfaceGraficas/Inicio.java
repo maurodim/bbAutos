@@ -72,6 +72,16 @@ public class Inicio extends javax.swing.JFrame {
     public void setNiv(Integer nive) {
         niv = nive;
         permisos(niv);
+        IngresoDePedidos ingPed=new IngresoDePedidos();
+        jDesktopPane1.add(ingPed);
+        ingPed.setVisible(true);
+        ingPed.pack();
+        ingPed.toFront();
+        try {
+            ingPed.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
@@ -131,7 +141,16 @@ public class Inicio extends javax.swing.JFrame {
         initComponents();
         Image icon=new ImageIcon(getClass().getResource("/imagen/icono.png")).getImage();
         this.setIconImage(icon);
-        
+        IngresoDePedidos ingPed=new IngresoDePedidos();
+        jDesktopPane1.add(ingPed);
+        ingPed.setVisible(true);
+        ingPed.pack();
+        ingPed.toFront();
+        try {
+            ingPed.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Inicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
  
         //permisos(nivel);
     }
@@ -276,6 +295,7 @@ public class Inicio extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem14);
 
+        jMenuItem21.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem21.setText("Informes");
         jMenuItem21.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -305,7 +325,7 @@ public class Inicio extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem6);
 
-        jMenuItem12.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem12.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem12.setText("Articulos");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,6 +334,7 @@ public class Inicio extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem12);
 
+        jMenuItem24.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem24.setText("Importar Excell");
         jMenuItem24.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -444,6 +465,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jMenu6.setText("Clientes");
 
+        jMenuItem20.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.ALT_MASK));
         jMenuItem20.setText("Modificacion de clientes");
         jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
