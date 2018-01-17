@@ -415,11 +415,12 @@ public class IngresoDePedidos extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel12)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton4)
-                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel12)
+                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)
@@ -1029,14 +1030,12 @@ private void cargarLista(ArrayList lista){
     Modificable mod=new Articulos();
     modelo=mod.mostrarListadoBusqueda(lista);
     Buscador.jTable1.setModel(modelo);
-        columnaNumero=Buscador.jTable1.getColumn("Codigo");
-        columnaNumero.setPreferredWidth(50);
-        columnaNumero.setMaxWidth(50);
+        
         columnaDescripcion=Buscador.jTable1.getColumn("Descripcion");
         columnaDescripcion.setPreferredWidth(100);
         columnaPrecio=Buscador.jTable1.getColumn("Precio");
-        columnaPrecio.setPreferredWidth(60);
-        columnaPrecio.setMaxWidth(60);
+        columnaPrecio.setPreferredWidth(80);
+        columnaPrecio.setMaxWidth(80);
         
     //this.jList1.setModel(modelo);
     Buscador.jTable1.requestFocus();
