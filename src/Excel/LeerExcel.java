@@ -179,14 +179,14 @@ private void printToConsole(List cellDataList)
             j=col1.getId();
             HSSFCell hssfCell = (HSSFCell) cellTempList.get(j);
             String stringCellValue = hssfCell.toString();
-            barra=stringCellValue;
+            barra=" "+stringCellValue;
             
             if(col5.getId()!=null){
                 j=col5.getId();
                 hssfCell = (HSSFCell) cellTempList.get(j);
                 stringCellValue = hssfCell.toString();
                 marca=stringCellValue.replaceAll("'","");
-                barra+=" "+stringCellValue;
+                //barra+=" "+stringCellValue;
             }else{
                 marca="";
             }
@@ -194,7 +194,7 @@ private void printToConsole(List cellDataList)
             if(col6.getId()!=null){
                 
                 j=col6.getId();
-                System.out.println("columna "+j+" "+proveedor+" fila "+i);
+                System.out.println("columna "+j+" "+proveedor+" fila "+i+" barra "+barra);
                 try{
                 hssfCell = (HSSFCell) cellTempList.get(j);
                 stringCellValue = hssfCell.toString();
@@ -203,7 +203,7 @@ private void printToConsole(List cellDataList)
                     System.err.println(eex);
                 }
                 proveedor=stringCellValue.replaceAll("'","");
-                barra+=" "+stringCellValue;
+                //barra+=" "+stringCellValue;
             }else{
                 proveedor="";
             }
@@ -238,12 +238,62 @@ private void printToConsole(List cellDataList)
                         stringCellValue=stringCellValue.replaceAll("$","");
                         precio=Numeros.ConvertirStringADouble(stringCellValue);
                         if(iaa ==1 && ori==2){
-                            precio=precio * 1.21;
+                            //precio=precio * 1.21;
                         }
                         
                     }
                 }
+                 if(arti.getCodigoDeBarra()!=null){
+                            System.err.println("EXISTE EL CODIGO "+arti.getCodigoDeBarra());
+                            //modeloL.addElement("EXISTE EL CODIGO "+arti.getCodigoDeBarra()+".....");
+                            arti.setPrecioCosto(costo);
+                            arti.setPrecioUnitarioNeto(precio);
+                            arti.setModificaPrecio(true);
+                            arti.setModificaServicio(false);
+                            arti.setMarca(marca);
+                            arti.setProveedor(proveedor);
+                            lstModificador.add(arti);
+                            //edi.ModificaionObjeto(arti);
+                            //barrr.jProgressBar1.setString("EXISTE EL CODIGO ");
+                            
+                           // barrr.jProgressBar1.setValue(progrr);
+                            
+                        }else{
+                            //arti=new Articulos();
+                            arti.setCodigoDeBarra(barra);
+                            if(descripcion.length() > 100){
+                                descripcion=descripcion.substring(0,100);
+                            }
+                            if(precio!=null){
+                                
+                            }else{
+                                precio=0.00;
+                            }
+                            arti.setDescripcionArticulo(descripcion);
+                            arti.setPrecioCosto(costo);
+                            arti.setPrecioDeCosto(costo);
+                            arti.setPrecioUnitarioNeto(precio);
+                            arti.setPrecioServicio(precio);
+                            arti.setModificaPrecio(true);
+                            arti.setModificaServicio(false);
+                            arti.setRecargo(1.00);
+                            arti.setDolar(1.00);
+                            arti.setStockMinimo(0.00);
+                            arti.setLista2(precio);
+                            arti.setLista3(precio);
+                            arti.setLista4(precio);
+                            arti.setMarca(marca);
+                            arti.setProveedor(proveedor);
+                            arti.setIdCombo(0);
+                            System.out.println("NO ESTA CARGADO "+arti.getDescripcionArticulo()+" // "+barra);
+                            //modeloL.addElement("NUEVO ARTICULO "+arti.getDescripcionArticulo()+".....");
+                            lstNuevos.add(arti);
+                            //edi.AltaObjeto(arti);
+                           // barrr.jProgressBar1.setValue(progrr);
 
+
+                        }
+                        costo=null;
             }
             
             
@@ -288,6 +338,7 @@ private void printToConsole(List cellDataList)
                             JOptionPane.showMessageDialog(null,"VEAMOS "+i);
                         }
                     */
+                    /*
                         if(arti.getCodigoDeBarra()!=null){
                             System.err.println("EXISTE EL CODIGO "+arti.getCodigoDeBarra());
                             //modeloL.addElement("EXISTE EL CODIGO "+arti.getCodigoDeBarra()+".....");
@@ -339,7 +390,7 @@ private void printToConsole(List cellDataList)
 
                         }
                         costo=null;
-
+                        */
                     
                     
     }   
